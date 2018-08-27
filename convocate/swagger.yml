@@ -1,0 +1,382 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /projects:
+    get:
+      operationId: "projects.read_all"
+      tags:
+        - "projects"
+      summary: "Read the list of projects"
+      description: "Read the list of projects"
+      responses:
+        200:
+          description: "Successful read projects list operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Project'
+
+    post:
+      operationId: "projects.create"
+      tags:
+        - "projects"
+      summary: "Create a new project"
+      description: "Create a new project"
+      parameters:
+        - name: project
+          in: body
+          description: Project to create
+          required: True
+          schema:
+            $ref: '#/definitions/NewProject'
+      responses:
+        201:
+          description: "Successful create project operation"
+
+  /projects/{name}:
+    get:
+      operationId: "projects.read_one"
+      tags:
+        - "projects"
+      summary: "Read one project"
+      description: "Read one project from the projects list"
+      parameters:
+        - name: name
+          in: path
+          description: Name of the project to get from the list
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successfully read one project from the projects list"
+          schema:
+            $ref: '#/definitions/Project'
+
+    put:
+      operationId: "projects.update"
+      tags:
+        - "projects"
+      summary: "Update one project"
+      description: "Update one project in the projects list"
+      parameters:
+        - name: name
+          in: path
+          description: Name of the project to update
+          type: string
+          required: True
+        - name: project
+          in: body
+          schema:
+            $ref: '#/definitions/Project'
+      responses:
+        200:
+          description: "Successfully updated one project in the projects list"
+
+    delete:
+      operationId: "projects.delete"
+      tags:
+        - "projects"
+      summary: "Remove one project"
+      description: "Remove one project in the projects list"
+      parameters:
+        - name: name
+          in: path
+          description: Name of the project to delete
+          type: string
+          required: True
+        - name: project
+          in: body
+          schema:
+            $ref: '#/definitions/Project'
+      responses:
+        200:
+          description: "Successfully updated one project in the projects list"
+
+  /projects/{project_name}/models:
+    get:
+      operationId: "mlmodels.read_all"
+      tags:
+        - "projects"
+        - "models"
+      summary: "Read the list of models for a project"
+      description: "Read the list of models"
+      parameters:
+        - name: project_name
+          in: path
+          description: Name of the project containing the models
+          type: string
+          required: True
+      responses:
+        200:
+          description: "Successful read models list operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Model'
+
+    post:
+      operationId: "mlmodels.create"
+      tags:
+        - "projects"
+        - "models"
+      summary: "Create a new model"
+      description: "Create a new model"
+      parameters:
+        - name: project_name
+          in: path
+          description: Name of the project containing the models
+          type: string
+          required: True
+        - name: model
+          in: body
+          description: Model to create
+          required: True
+          schema:
+            $ref: '#/definitions/NewModel'
+      responses:
+        201:
+          description: "Successful create model operation"
+
+  /projects/{project_name}/models:train:
+    post:
+      operationId: "mlmodels.create_and_train"
+      tags:
+        - "projects"
+        - "models"
+      summary: "Create and train a new model in a project"
+      description: "Create and train a new model in a project"
+      parameters:
+        - name: project_name
+          in: path
+          description: Name of the project containing the models
+          type: string
+          required: True
+        - name: data
+          in: body
+          description: Training data
+          required: True
+          schema:
+            $ref: '#/definitions/TrainingData'
+      responses:
+        200:
+          description: "Successful train model operation"
+
+  /projects/{project_name}/models/{model_name}:
+    get:
+      operationId: "mlmodels.read_one"
+      tags:
+        - "projects"
+        - "models"
+      summary: "Read information for a model"
+      description: "Read information for a model"
+      parameters:
+        - name: project_name
+          in: path
+          description: Name of the project containing the models
+          type: string
+          required: True
+        - name: model_name
+          in: path
+          description: Name of the model
+          type: string
+          required: True
+      responses:
+        200:
+          description: "Successfully read one model from the models list for a project"
+          schema:
+            $ref: '#/definitions/Model'
+
+    post:
+      operationId: "mlmodels.score"
+      tags:
+        - "projects"
+        - "models"
+      summary: "Score text using a model"
+      description: "Score text using a model"
+      parameters:
+        - name: project_name
+          in: path
+          description: Name of the project containing the models
+          type: string
+          required: True
+        - name: model_name
+          in: path
+          description: Name of the model
+          type: string
+          required: True
+      responses:
+        200:
+          description: "Successfully read one model from the models list for a project"
+          schema:
+            $ref: '#/definitions/Model'
+
+
+  # /projects/{project_name}/models/{model_name}:train:
+  #   post:
+  #   operationId: "mlmodels.train"
+  #   tags:
+  #     - "projects"
+  #     - "models"
+  #   summary: "Train a model"
+  #   description: "Train a model"
+  #   parameters:
+  #     - name: project_name
+  #       in: path
+  #       description: Name of the project containing the model
+  #       type: string
+  #       required: True
+  #     - name: model_name
+  #       in: path
+  #       description: Name of the model
+  #       type: string
+  #       required: True
+  #     - name: data
+  #       in: body
+  #       description: Training data
+  #       required: True
+  #       schema:
+  #         $ref: '#/definitions/TrainingData'
+  #   responses:
+  #     200:
+  #       description: "Successfully trained one model in a project"
+
+  # /projects/{project_name}/models/{model_name}:evaluate:
+  #   post:
+  #   operationId: "mlmodels.evaluate"
+  #   tags:
+  #     - "projects"
+  #     - "models"
+  #   summary: "Evaluate a model"
+  #   description: "Evaluate a model"
+  #   parameters:
+  #     - name: project_name
+  #       in: path
+  #       description: Name of the project containing the model
+  #       type: string
+  #       required: True
+  #     - name: model_name
+  #       in: path
+  #       description: Name of the model
+  #       type: string
+  #       required: True
+  #   responses:
+  #     200:
+  #       description: "Successfully evaluated a model"
+  #       schema:
+  #         $ref: '#/definitions/Evaluation'
+
+
+definitions:
+  People:
+    properties:
+      fname:
+        type: "string"
+      lname:
+        type: "string"
+      timestamp:
+        type: "string"
+  Project:
+    allOf:
+      - $ref: '#/definitions/NewProject'
+  NewProject:
+    required:
+      - name
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+      timestamp:
+        type: "string"
+  Model:
+    allOf:
+      - $ref: '#/definitions/NewModel'
+  NewModel:
+    required:
+      - name
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+      config:
+        type: "string"
+      timestamp:
+        type: "string"
+  TrainingData:
+    allOf:
+      - $ref: '#/definitions/NewTrainingData'
+  NewTrainingData:
+    required:
+      - config
+      - data
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+      config:
+        type: object
+        properties:
+          language:
+            type: "string"
+          pipeline:
+            type: "string"
+      data:
+        type: "string"
+  Evaluation:
+    properties:
+      accuracy:
+        type: "number"
+      f1_score:
+        type: "number"
+      precision:
+        type: "number"
+      report:
+        type: "string"
+      predictions:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            intent:
+              type: "string"
+            predicted:
+              type: "string"
+            text:
+              type: "string"
+            confidence:
+              type: "integer"
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

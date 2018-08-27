@@ -1,0 +1,6 @@
+Click>=6.0
+Flask
+connexion
+rasa_nlu
+gunicorn
+spacy
